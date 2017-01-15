@@ -1,0 +1,15 @@
+Token: Integer	Line: 1 Column: 1 Value: 123456789
+Token: Integer	Line: 2 Column: 1 Value: 12345
+Token: Integer	Line: 2 Column: 9 Value: 12
+Token: Identifier	Line: 2 Column: 11 Lexem: E
+Token: Minus	Line: 2 Column: 12 
+Token: Integer	Line: 2 Column: 13 Value: 12
+Token: Integer	Line: 3 Column: 1 Value: 12345
+Token: Integer	Line: 3 Column: 7 Value: 13
+Token: Identifier	Line: 3 Column: 9 Lexem: E
+Token: Plus	Line: 3 Column: 10 
+Token: Integer	Line: 3 Column: 11 Value: 11
+Token: Identifier	Line: 5 Column: 63 Lexem: E
+Token: Plus	Line: 5 Column: 64 
+Token: Identifier	Line: 6 Column: 9 Lexem: E
+Token: Plus	Line: 6 Column: 10 
