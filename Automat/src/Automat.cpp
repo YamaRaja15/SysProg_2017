@@ -80,9 +80,9 @@ bool Automat::accept(char c) {
 			setLastFinalState(INTEGER);
 
 			return true;
-
+		// Check if special sign (potential 'composite sign'; like ":=" "=:=" "&&")
 		} else if (isSign(c) && c != ':' && c != '=' && c != '&') {
-			/** ANYSIGN **/
+			/** currentState START? **/
 			currentState = SIGN;
 			setLastFinalState(SIGN);
 
@@ -118,8 +118,9 @@ bool Automat::accept(char c) {
 			return true;
 
 		} else {
-
-			back++;
+			// No recognized lexeme. Ignore error Token.
+			setLastFinalState(UNKNOWN);
+			// don't go back, keep reading.
 			return false;
 		}
 	}
@@ -169,7 +170,6 @@ bool Automat::accept(char c) {
 			return true;
 		} else {
 			currentState = START;
-
 			back++;
 			return false;
 		}
@@ -202,17 +202,18 @@ bool Automat::accept(char c) {
 		 */
 	case COLON: {
 		if (c == '*') {
-			currentState = COMMENT1;
+			currentState = COMMENT1;	// :*
 			setLastFinalState(COMMENT1);
 
 			return true;
 		} else if (c == '=') {
 			currentState = START;
-			setLastFinalState(ASSIGN);
+			setLastFinalState(ASSIGN);	// :=
 
 			return false;
 
 		} else {
+			// already start of next token; put back
 			currentState = START;
 
 			back++;
@@ -223,6 +224,7 @@ bool Automat::accept(char c) {
 		/**
 		 * #################
 		 * EQUAL STATE
+		 * last read		=
 		 * #################
 		 */
 	case EQUAL: {
@@ -245,6 +247,8 @@ bool Automat::accept(char c) {
 		/**
 		 * #################
 		 * EQUAL COLON STATE
+		 * last read		=:
+		 * check	=	for		=:=
 		 * #################
 		 */
 	case EQUAL_COLON: {
@@ -263,6 +267,8 @@ bool Automat::accept(char c) {
 		/**
 		 * #################
 		 * COMMENT1 STATE
+		 * last read:	:*[...] (currently in comment)
+		 * check:	*	for		*:	
 		 * #################
 		 */
 	case COMMENT1: {
@@ -283,6 +289,8 @@ bool Automat::accept(char c) {
 		/**
 		 * #################
 		 * COMMENT2 STATE
+		 * last read		*:	[...]	*	(currently in comment)
+		 * check:	:	for	*:
 		 * #################
 		 */
 	case COMMENT2: {
@@ -311,6 +319,8 @@ bool Automat::accept(char c) {
 		/**
 		 * #################
 		 * AND STATE
+		 * last read		&
+		 * check			&	for	&&
 		 * #################
 		 */
 	case AND_SIGN: {
@@ -326,17 +336,12 @@ bool Automat::accept(char c) {
 	}
 		/**
 		 * #################
-		 * ANYSIGN STATE
+		 * INVALID
+		 * last read		unknown symbol
 		 * #################
 		 */
-
-		/**
-		 * #################
-		 * SIGN5 STATE
-		 * #################
-		 */
-
 	default: {
+		
 		back++;
 		return false;
 	}

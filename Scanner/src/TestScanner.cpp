@@ -3,9 +3,12 @@
 #include <cstddef>
 #include <iostream>
 #include <fstream>
+#include <stdlib.h>
+
 
 int main(int argc, char *argv[]) {
 	// check if a path to a text file is provided
+	printf("processing...");
 	if (argc == 3) {
 		Scanner* scanner = new Scanner(argv[1]);
 
@@ -30,6 +33,7 @@ int main(int argc, char *argv[]) {
 
 			token = scanner->nextToken();
 		}
+		printf("stop");
 
 		output_file.close();
 		delete scanner;

@@ -14,7 +14,7 @@ Symboltable::Symboltable() {
 	for( int i = 0; i < tablelength; i++) {
 		table[i] = new List();
 	}
-
+	initSymbols();	// fill with keywords.
 }
 
 Symboltable::~Symboltable() {
@@ -51,41 +51,16 @@ char* Symboltable::lookup(char* key){
 	return table[i]->getLexem(key);
 
 }
-/*
+
+/**
+ * Methode erzeugt Einträge der bekannten Schlüsselworte der Grammatik, die immer
+ * benötigt werden, und daher bei Initialisierung des Konstruktors aufgerufen wird.
+ */
 void SymbolTable::initSymbols() {
 	// special identifiers
 	insert("while"); insert("WHILE");
 	insert("if"); insert("IF");
-	insert("print");
-	insert("read");
-	insert("else"); insert("ELSE");
-	insert("int");
-
-	// signs
-	// slash and equal are processed by the state machine
-	insert("+");
-	insert("-");
-	insert(":");
-	insert("*");
-	insert("<");
-	insert(">");
-	insert("=");
-	insert(":=");
-	insert("=:=");
-	insert("!");
-	insert("&");
-	insert(";");
-
-	// brackets
-	insert("[");
-	insert("]");
-	insert("(");
-	insert(")");
-	insert("{");
-	insert("}");
-}
-*/
-
+	
 /**
  * Methode erstellt einen Key, welcher sich aus dem Lexem und dem Wort "Key"
  * zusammensetzt.

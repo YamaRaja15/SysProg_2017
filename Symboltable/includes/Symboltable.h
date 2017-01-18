@@ -14,6 +14,7 @@ class Symboltable {
 public:
 	Symboltable();
 	virtual ~Symboltable();
+	void SymbolTable::initSymbols();	// für Keywords
 	char* insert(char* lexem);
 	char* lookup(char* key);
 

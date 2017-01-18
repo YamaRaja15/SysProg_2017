@@ -1,6 +1,5 @@
 #include <iostream>
 #include <stdlib.h>
-#include <errno.h>
 
 #include "../includes/Scanner.h"
 
@@ -44,7 +43,7 @@ Token* Scanner::nextToken() {
 	}
 	return analyse(c, char_count);
 }
-// analyse starting...
+// Start analyzing...
 Token* Scanner::analyse(char c, int char_count) {
 
 	Token::Type lexem_type = automat->getType();
@@ -73,7 +72,6 @@ Token* Scanner::analyse(char c, int char_count) {
 
 		Token* token = new Token(Token::ASSIGN, automat->getColumn(),
 				automat->getLine(), NULL, 0);
-
 		prepareForNextLexem(bad_char_count);
 
 		return token;
@@ -184,19 +182,43 @@ Token* Scanner::analyse(char c, int char_count) {
 
 		// if this could not be parsed, continue with the next token.
 		return nextToken();
+		// Check if identifier is either keyword "if" or "while"
 	} else if (lexem_type == Token::IDENTIFIER) {
 
 		int lexem_length = char_count - bad_char_count;
 		scanner_buffer[lexem_length] = '\0';
-		symboltable->insert(scanner_buffer);
 		Information* info = new Information(scanner_buffer);
-		Token* token = new Token(lexem_type, automat->getColumn(),
-				automat->getLine(), info, 0);
-
+		
+		// Lexemtyp anpassen bei Keyword?
+		if (scanner_buffer  == "IF" || 
+					scanner_buffer == "if" ){
+				lexem_type = Token::IF;
+			
+		} else if (scanner_buffer = "WHILE" ||
+					scanner_buffer == "while") {
+				lexem_type = Token::WHILE;
+		} else{
+			// Ansonsten Identifier in SymbolTabelle einfügen
+			symboltable->insert(scanner_buffer);
+		}
+			// Token für erkanntes Lexem erzeugen.
+			Token* token = new Token(lexem_type, automat->getColumn(),
+					automat->getLine(), info, 0);
+			prepareForNextLexem(bad_char_count);
+			return token;
+	} else {
+		// Unbekannter Typ -- Fehlertoken.
+		// Muss nicht gespeichert werden; aber auf Konsole ausgeben.
+		//Token* token = new Token(, automat->getColumn(),
+		//			automat->getLine(), info, 0);
+		printf("unknown Token Line: "+ automat->getLine()
+				+ " Column: "+ automat->getColumn()+" Symbol: " +c);
 		prepareForNextLexem(bad_char_count);
 
-		return token;
-	}
+		}
+		
+
+	
 
 }
 void Scanner::prepareForNextLexem(int back) {
@@ -207,4 +229,8 @@ void Scanner::prepareForNextLexem(int back) {
 	automat->reset(back);
 	char_count = 0;
 }
+
+// For checking whether an identified identifier is a keyword.
+// used by: analyse()
+
 
