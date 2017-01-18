@@ -1,5 +1,11 @@
 #include "../includes/Automat.h"
 
+/**
+ * Array with all sign characters available in the Grammar.
+ */
+static char SIGN_CHARACTERS[] = { '+', '-', ':', '*', '<', '>', '=', 
+		'!', '&', ';', '(', ')', '{', '}', '[', ']' };
+
 Automat::Automat() {
 	currentState = START;
 	lastFinalState = START;
@@ -7,35 +13,44 @@ Automat::Automat() {
 	startLine = 1;
 	currentLine = 1;
 	currentColumn = 1;
-	back = 0;
+	putBack = 0;
 }
 
 Automat::~Automat() {
-	// nothing to to here
+	// nothing to do here
 }
 
-/**
- * CHECKS FOR THE STATES OF THE MACHIN
- */
+
+// #####~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~####
+// #####	Methods for checking states 	####
+// #####~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~####
 
 bool Automat::isSpace(char c) {
 	return c == ' ' || c == '\t';
-}
-
-bool Automat::isIdentifier(char c) {
-	return ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
-			|| (c >= '0' && c <= '9' && currentState == IDENTIFIER));
 }
 
 bool Automat::isInteger(char c) {
 	return c >= '0' && c <= '9';
 }
 
+bool Automat::isLetter(char c) {
+	return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
+}
+
+/**
+ * An Identifier is any string made up of letters and numbers,
+ * starting with a letter.
+ */
+bool Automat::isIdentifier(char c) { 
+	return (isLetter(char c)
+			|| isInteger(c) && currentState == IDENTIFIER));
+}
+
 bool Automat::isSign(char c) {
-	char signs[] = { '+', '-', ':', '*', '<', '>', '=', '!', '&', ';', '(', ')',
-			'{', '}', '[', ']' };
-	for (int i = 0; i < 16; i++) {
-		if (signs[i] == c)
+//	char signs[] = { '+', '-', ':', '*', '<', '>', '=', '!', '&', ';', '(', ')',
+//			'{', '}', '[', ']' };
+	for (int i = 0; i < std::sizeof(SIGN_CHARACTERS); i++) {
+		if (SIGN_CHARACTERS[i] == c)
 			return true;
 	}
 	return false;
@@ -46,21 +61,22 @@ bool Automat::isNewline(char c) {
 }
 
 /**
- * insert next char into the machine
- * if this returns false, you can check the lastfinalstate and back via getters.
- * afterwards do not forget to call reset() before inserting new chars
+// #####~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~####
+// #####	Method for iterating through	#### 
+// #####	the characters of the buffer 	####
+// #####~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~####
+ * Purpose:	insert next char into the machine
+ * Hints:
+ * 	- If "false"; you can retrieve lastfinalstate via getters.
+ 	  In that case, call reset() before inserting new chars.
  * @param  c char to insert
- * @return   returns false if it is not possible that further insertions will lead to a valid state.
+ * @return   false, if it is not possible to reach a valid state with further insertions
  */
 bool Automat::accept(char c) {
 	currentColumn++;
 	switch (currentState) {
 
-	/**
-	 * #################
-	 * START STATE
-	 * #################
-	 */
+	//##(0.)##	Start -- For initial method call
 	case START: {
 		if (isIdentifier(c)) {
 			currentState = IDENTIFIER;
@@ -105,7 +121,7 @@ bool Automat::accept(char c) {
 		} else if (c == '&') {
 			/**SIGN 3 **/
 			currentState = AND_SIGN;
-			back++;
+			putBack++;
 			return true;
 
 		} else if (isNewline(c)) {
@@ -125,152 +141,112 @@ bool Automat::accept(char c) {
 		}
 	}
 
-		/**
-		 * #################
-		 * IDENTIFIER STATE
-		 * #################
-		 */
+	//	#(1.)#		Switch through possible reading states
+	
+	//#(1_A)#	IDENTIFIER STATE
 	case IDENTIFIER: {
 		if (isIdentifier(c)) {
-
 			return true;
 		} else {
-			currentState = START;
-
-			back++;
+			currentState = START;			
+			putBack++;
 			return false;
 		}
 	}
 
-		/**
-		 * #################
-		 * SPACE STATE
-		 * #################
-		 */
+	//#(1_B)#	SPACE STATE
 	case SPACE: {
 		if (isSpace(c)) {
-
 			return true;
 		} else {
 			currentState = START;
-
-			back++;
+			putBack++;
 			return false;
 		}
 	}
 
-		/**
-		 * #################
-		 * INTEGER STATE
-		 * #################
-		 */
+	//#(1_C)#	INTEGER STATE	
 	case INTEGER: {
 		if (isInteger(c)) {
-
 			return true;
 		} else {
 			currentState = START;
-			back++;
+			putBack++;
 			return false;
 		}
 	}
 
-		/**
-		 * #################
-		 * NEWLINE STATE
-		 * #################
-		 */
+	//#(1_D)# 	NEWLINE STATE
 	case NEWLINE: {
 		if (isNewline(c)) {
 			currentColumn = 1;
 			currentLine++;
-
 			return true;
-
 		} else {
 			currentState = START;
-
-			back++;
+			putBack++;
 			return false;
 		}
 	}
 
-		/**
-		 * #################
-		 * COLON STATE
-		 * #################
-		 */
+	//#(1_E)# 	COLON STATE
 	case COLON: {
 		if (c == '*') {
 			currentState = COMMENT1;	// :*
 			setLastFinalState(COMMENT1);
-
 			return true;
+			
 		} else if (c == '=') {
 			currentState = START;
 			setLastFinalState(ASSIGN);	// :=
-
 			return false;
 
 		} else {
 			// already start of next token; put back
 			currentState = START;
-
-			back++;
+			putBack++;
 			return false;
 		}
 	}
 
-		/**
-		 * #################
-		 * EQUAL STATE
-		 * last read		=
-		 * #################
-		 */
+	//#(1_E)# 	EQUAL STATE
+	//#			last read:		=
 	case EQUAL: {
 		if (c == ':') {
 			currentState = EQUAL_COLON;
 			setLastFinalState(EQUAL);
 
-			back++;
+			putBack++;
 
 			return true;
 
 		} else {
 			currentState = START;
 
-			back++;
+			putBack++;
 			return false;
 		}
 	}
 
-		/**
-		 * #################
-		 * EQUAL COLON STATE
-		 * last read		=:
-		 * check	=	for		=:=
-		 * #################
-		 */
+	//#(1_F)# 	EQUAL STATE
+	//#			last read:				=:
+	//#			check:	=		for		=:=
 	case EQUAL_COLON: {
 		if (c == '=') {
 			currentState = START;
 			setLastFinalState(EQUAL_ASSIGN);
-			back--;
+			putBack--;
 			return false;
 		} else {
 
-			back++;
+			putBack++;
 			return false;
 		}
 	}
 
-		/**
-		 * #################
-		 * COMMENT1 STATE
-		 * last read:	:*[...] (currently in comment)
-		 * check:	*	for		*:	
-		 * #################
-		 */
+	//#(1_E)# 	COMMENT1 STATE
+	//#			last read:	:*[...] (currently in comment)
+	//# 		check:	*	for		*:	
 	case COMMENT1: {
 		if (c == '*') {
 			currentState = COMMENT2;
@@ -286,13 +262,10 @@ bool Automat::accept(char c) {
 			return true;
 		}
 	}
-		/**
-		 * #################
-		 * COMMENT2 STATE
-		 * last read		*:	[...]	*	(currently in comment)
-		 * check:	:	for	*:
-		 * #################
-		 */
+
+		//#(1_F)# 	EQUAL STATE
+		//#			last read:		*:	[...]	*	(currently in comment)
+		//#			check:	:	for	*:
 	case COMMENT2: {
 		if (c == ':') {
 			currentState = COMMENT3;
@@ -316,13 +289,9 @@ bool Automat::accept(char c) {
 		}
 	}
 
-		/**
-		 * #################
-		 * AND STATE
-		 * last read		&
-		 * check			&	for	&&
-		 * #################
-		 */
+	//#(1_G)# 	& STATE
+	//#			last read:	&
+	//#			check		& for &&
 	case AND_SIGN: {
 		if (c == '&') {
 			currentState = START;
@@ -330,28 +299,26 @@ bool Automat::accept(char c) {
 
 			return false;
 		} else {
-			back++;
+			putBack++;
 			return false;
 		}
 	}
-		/**
-		 * #################
-		 * INVALID
-		 * last read		unknown symbol
-		 * #################
-		 */
+
+	//#(1_H)# 	FAULTY STATE
+	//#			last read:	unknown symbol
 	default: {
 		
-		back++;
+		putBack++;
 		return false;
 	}
-	}
+	}//end: state switch
 }
 
 /**
- * translate final states of the machine into token types
- * @return last final state of the machine as token type. if there is no valid last final state, this will 
- * return the token type UNKNOWN
+ * Purpose:		translates final states of the machine
+ * 				into token types
+ * @return 		- The last final state of the machine as token type.
+ * Comment:		- If there is no valid state, returns type UNKNOWN.
  */
 Token::Type Automat::getType() const {
 	switch (lastFinalState) {
@@ -387,49 +354,51 @@ Token::Type Automat::getType() const {
 }
 
 /**
- * how many chars were invalid after the last final state
+ * Purpose:	Getter for count of chars that were invalid after the last final state.
+ * 			Used to tell the buffer how many characters 'to put back' on the machine.
  * @return number of invalid chars after the last final state
  */
-int Automat::getBack() const {
-	return back;
+int Automat::getBackCount() const {
+	return putBack;
 }
 
 /**
- * get the start line of the last recognized lexem
- * @return [description]
+ * Purpose:	Getter for starting line of the last recognized lexeme
+ * @return The index of the starting line
  */
 int Automat::getLine() const {
 	return startLine;
 }
 
 /**
- * get the column of the last recognized lexem
- * @return [description]
+ * Purpose:	Getter for the column of the last recognized lexeme
+ * @return The column index of the last lexeme
  */
 int Automat::getColumn() const {
 	return startColumn;
 }
 
 /**
- * reset the machine to start processing the next lexem
- * @param bad_char_count how many chars back
+ * Purpose:	Resets the machine to start; for processing the next lexeme
+ * @param bad_char_count amount of chars required 'to be put back'
  */
 void Automat::reset(int bad_char_count) {
 	// we go back in the buffer, so do not count these chars
 	currentColumn -= bad_char_count;
 	back = 0;
-	lastFinalState = UNDEFINED;
+	lastFinalState = UNKNOWN;
 	currentState = START;
 	startLine = currentLine;
 	startColumn = currentColumn;
 }
 
 /**
- * set last final state. this is a separate method as it is easy to forget resetting back = 0
- * @param state the last final state
+ * Purpose: Setter for last final state.
+ * 			Also resets the count that keeps track of the characters required to move back.
+ * @param state the desired state
  */
 void Automat::setLastFinalState(State state) {
 	lastFinalState = state;
-	back = 0;
+	back = 0;	// reset count for putting characters back
 }
 

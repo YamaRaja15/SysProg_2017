@@ -7,22 +7,22 @@ class Automat {
 	private:
 		typedef enum {
 			START = 0,
-			IDENTIFIER,
-			SPACE,
+			IDENTIFIER,	// For Identifiers and (temporarily) keywords
+			SPACE,		
 			INTEGER,
 			SIGN,
 			COLON,
 			EQUAL,
 			AND_SIGN,
-			DOUBLE_AND,
+			DOUBLE_AND,		// &&
 			ASSIGN,
-			EQUAL_COLON,
-			EQUAL_ASSIGN,
-			COMMENT1,
-			COMMENT2,
+			EQUAL_COLON,	// =:
+			EQUAL_ASSIGN,	// =:=
+			COMMENT1,		// *:
+			COMMENT2,		// 
 			COMMENT3,
 			NEWLINE,
-			UNDEFINED
+			UNKNOWN	// For Error Tokens
 		} State;
 
 		State currentState;
@@ -32,7 +32,8 @@ class Automat {
 		int startLine;
 		int currentLine;
 		int currentColumn;
-		int back;
+		int putBack;		// Counts amount of characters to put back in case
+							// too many have been 'looked at' during token creation process
 
 		void setLastFinalState(State);
 
@@ -50,10 +51,9 @@ class Automat {
 		bool isNewline(char c);
 
 		Token::Type getType() const;
-		int getBack() const;
+		int getBackCount() const;
 		int getLine() const;
 		int getColumn() const;
-		
 };
 
 #endif /* AUTOMAT_H */

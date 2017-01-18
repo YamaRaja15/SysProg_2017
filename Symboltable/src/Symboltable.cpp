@@ -56,11 +56,11 @@ char* Symboltable::lookup(char* key){
  * Methode erzeugt Einträge der bekannten Schlüsselworte der Grammatik, die immer
  * benötigt werden, und daher bei Initialisierung des Konstruktors aufgerufen wird.
  */
-void SymbolTable::initSymbols() {
+void Symboltable::initSymbols() {
 	// special identifiers
 	insert("while"); insert("WHILE");
 	insert("if"); insert("IF");
-	
+}
 /**
  * Methode erstellt einen Key, welcher sich aus dem Lexem und dem Wort "Key"
  * zusammensetzt.
