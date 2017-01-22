@@ -8,7 +8,8 @@
 
 int main(int argc, char *argv[]) {
 	// check if a path to a text file is provided
-	printf("processing...");
+	cout << "processing..." << '\n';
+
 	if (argc == 3) {
 		Scanner* scanner = new Scanner(argv[1]);
 
@@ -18,6 +19,14 @@ int main(int argc, char *argv[]) {
 		output_file.open(argv[2]);
 
 		while (token != NULL) {
+			if(token->getType()==Token::UNKNOWN){
+				cout << "Token: "
+									<< Token::token_type_as_string(token->getType()) << '\t';
+				cout << "Line: " << token->getLine() << ' ';
+				cout << "Column: " << token->getColumn() << ' ';
+
+							cout << '\n';
+			}
 			output_file << "Token: "
 					<< Token::token_type_as_string(token->getType()) << '\t';
 			output_file << "Line: " << token->getLine() << ' ';
@@ -34,6 +43,8 @@ int main(int argc, char *argv[]) {
 			token = scanner->nextToken();
 		}
 		printf("stop");
+
+		cout << "stop";
 
 		output_file.close();
 		delete scanner;

@@ -40,7 +40,7 @@ char Buffer::getChar() {
 		if (next == &buffer1[1024]) {/* am Ende der ersten Hälfte*/
 			// lade die zweite Hälfte neu;
 			if (newRead ) {
-				read(handle, buffer2, 1024);
+				end = read(handle, buffer2, 1024);
 
 			}
 			newRead = true;
@@ -49,7 +49,7 @@ char Buffer::getChar() {
 		} else if (next == &buffer2[1024]) { /* am Ende der zweite Hälfte*/
 			// lade die erste Hälfte neu;
 			if (newRead) {
-				read(handle, buffer1, 1024);
+				end = read(handle, buffer1, 1024);
 			}
 			newRead = true;
 			next = buffer1;

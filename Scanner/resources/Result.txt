@@ -1,15 +1,57 @@
-Token: Integer	Line: 1 Column: 1 Value: 123456789
-Token: Integer	Line: 2 Column: 1 Value: 12345
-Token: Integer	Line: 2 Column: 9 Value: 12
-Token: Identifier	Line: 2 Column: 11 Lexem: E
-Token: Minus	Line: 2 Column: 12 
-Token: Integer	Line: 2 Column: 13 Value: 12
-Token: Integer	Line: 3 Column: 1 Value: 12345
-Token: Integer	Line: 3 Column: 7 Value: 13
-Token: Identifier	Line: 3 Column: 9 Lexem: E
-Token: Plus	Line: 3 Column: 10 
-Token: Integer	Line: 3 Column: 11 Value: 11
-Token: Identifier	Line: 5 Column: 63 Lexem: E
-Token: Plus	Line: 5 Column: 64 
-Token: Identifier	Line: 6 Column: 9 Lexem: E
-Token: Plus	Line: 6 Column: 10 
+Token: Integer	Line: 1 Column: 1 Value: 12345
+Token: Identifier	Line: 2 Column: 1 Lexem: ABCDEFGHIJKLMNOPQRSTUVWXYZ
+Token: Identifier	Line: 3 Column: 1 Lexem: abcdefghijklmnopqrstuvwxyz
+Token: Plus	Line: 4 Column: 1 
+Token: Minus	Line: 4 Column: 4 
+Token: Star	Line: 4 Column: 7 
+Token: UNKNOWN	Line: 4 Column: 10 
+Token: UNKNOWN	Line: 4 Column: 13 
+Token: Semicolon	Line: 4 Column: 16 
+Token: Paranthese open	Line: 4 Column: 19 
+Token: Paranthese close	Line: 4 Column: 22 
+Token: Assign	Line: 4 Column: 25 
+Token: Integer	Line: 5 Column: 1 Value: 1234
+Token: UNKNOWN	Line: 5 Column: 5 
+Token: Integer	Line: 5 Column: 6 Value: 0
+Token: Integer	Line: 6 Column: 1 Value: 12345
+Token: UNKNOWN	Line: 6 Column: 6 
+Token: Integer	Line: 6 Column: 7 Value: 12
+Token: Identifier	Line: 6 Column: 9 Lexem: E123
+Token: Integer	Line: 7 Column: 1 Value: 12345
+Token: UNKNOWN	Line: 7 Column: 6 
+Token: Integer	Line: 7 Column: 7 Value: 123
+Token: Identifier	Line: 7 Column: 10 Lexem: E
+Token: Plus	Line: 7 Column: 11 
+Token: Integer	Line: 7 Column: 12 Value: 123
+Token: Integer	Line: 8 Column: 1 Value: 12345
+Token: UNKNOWN	Line: 8 Column: 6 
+Token: Integer	Line: 8 Column: 7 Value: 12
+Token: Identifier	Line: 8 Column: 9 Lexem: E
+Token: Minus	Line: 8 Column: 10 
+Token: Integer	Line: 8 Column: 11 Value: 123
+Token: Identifier	Line: 10 Column: 1 Lexem: dies
+Token: Identifier	Line: 10 Column: 6 Lexem: ist
+Token: Identifier	Line: 10 Column: 10 Lexem: ein
+Token: Paranthese open	Line: 10 Column: 14 
+Token: Star	Line: 10 Column: 15 
+Token: Integer	Line: 10 Column: 17 Value: 111
+Token: Identifier	Line: 10 Column: 21 Lexem: aaaa
+Token: Plus	Line: 10 Column: 26 
+Token: Minus	Line: 10 Column: 27 
+Token: Integer	Line: 10 Column: 29 Value: 1234
+Token: UNKNOWN	Line: 10 Column: 33 
+Token: Integer	Line: 10 Column: 34 Value: 0
+Token: Identifier	Line: 10 Column: 36 Lexem: mod
+Token: Star	Line: 10 Column: 39 
+Token: Paranthese close	Line: 10 Column: 40 
+Token: Identifier	Line: 10 Column: 42 Lexem: Kommentar
+Token: Identifier	Line: 12 Column: 1 Lexem: durch
+Token: Identifier	Line: 13 Column: 1 Lexem: modulo
+Token: Identifier	Line: 14 Column: 1 Lexem: modulodurch
+Token: Identifier	Line: 15 Column: 1 Lexem: durchmodulo
+Token: Identifier	Line: 16 Column: 1 Lexem: ABCDEFGHIJK
+Token: UNKNOWN	Line: 16 Column: 12 
+Token: Identifier	Line: 16 Column: 13 Lexem: LMNOPQRSTUVWXYZ
+Token: while	Line: 17 Column: 1 
+Token: if	Line: 17 Column: 7 
+Token: Identifier	Line: 18 Column: 1 Lexem: IFWHILE

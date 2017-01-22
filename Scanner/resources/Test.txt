@@ -1,3 +1,22 @@
+12345
+ABCDEFGHIJKLMNOPQRSTUVWXYZ
+abcdefghijklmnopqrstuvwxyz
++  -  *  /  ,  ;  (  )  :=  
+1234.0
+12345.12E123
+12345.123E+123
+12345.12E-123
+
+dies ist ein (* 111 aaaa +- 1234.0 mod*) Kommentar
+
+durch
+modulo
+modulodurch
+durchmodulo
+ABCDEFGHIJK$LMNOPQRSTUVWXYZ
+while IF
+IFWHILE
+=======
 0123456789 
 
 

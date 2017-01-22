@@ -33,7 +33,6 @@ char* Symboltable::insert(char* lexem){
 	int i = hashing(key);
 
 	if(! table[i]->contains(lexem)){
-		printf("true ");
 		table[i]->addNode(new Element (lexem, key));
 	}
 	return key;
@@ -61,6 +60,7 @@ void Symboltable::initSymbols() {
 	insert("while"); insert("WHILE");
 	insert("if"); insert("IF");
 }
+
 /**
  * Methode erstellt einen Key, welcher sich aus dem Lexem und dem Wort "Key"
  * zusammensetzt.

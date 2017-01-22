@@ -1,6 +1,6 @@
 #include <iostream>
 #include <stdlib.h>
-
+#include <errno.h>
 #include "../includes/Scanner.h"
 
 Scanner::Scanner(const char* filename) {
@@ -40,7 +40,7 @@ Token* Scanner::nextToken() {
 	if (char_count == 0) {
 		// if there are no more chars we reached the end
 		return NULL;
-	}
+	};
 	return analyse(c, char_count);
 }
 // Start analyzing...
@@ -55,8 +55,11 @@ Token* Scanner::analyse(char c, int char_count) {
 
 		return nextToken();
 	} else if (lexem_type == Token::UNKNOWN) {
-		scanner_buffer[char_count] = '\0';
+		Token* token = new Token(Token::UNKNOWN, automat->getColumn(),
+						automat->getLine(), NULL, 0);
+				prepareForNextLexem(0);
 
+				return token;
 		// reset 0 chars as they are unknown. if we read them again
 		// this will result in a endless loop!
 		prepareForNextLexem(0);
@@ -190,12 +193,13 @@ Token* Scanner::analyse(char c, int char_count) {
 		Information* info = new Information(scanner_buffer);
 		
 		// Lexemtyp anpassen bei Keyword?
-		if (scanner_buffer  == "IF" || 
-					scanner_buffer == "if" ){
+		if (compareArray(scanner_buffer, "IF") ||
+				compareArray(scanner_buffer, "if")){
 				lexem_type = Token::IF;
 			
-		} else if (scanner_buffer = "WHILE" ||
-					scanner_buffer == "while") {
+		} else if (compareArray(scanner_buffer, "WHILE") ||
+				compareArray(scanner_buffer, "while")){
+
 				lexem_type = Token::WHILE;
 		} else{
 			// Ansonsten Identifier in SymbolTabelle einfügen
@@ -206,31 +210,35 @@ Token* Scanner::analyse(char c, int char_count) {
 					automat->getLine(), info, 0);
 			prepareForNextLexem(bad_char_count);
 			return token;
-	} else {
-		// Unbekannter Typ -- Fehlertoken.
-		// Muss nicht gespeichert werden; aber auf Konsole ausgeben.
-		//Token* token = new Token(, automat->getColumn(),
-		//			automat->getLine(), info, 0);
-		printf("unknown Token Line: "+ automat->getLine()
-				+ " Column: "+ automat->getColumn()+" Symbol: " +c);
-		prepareForNextLexem(bad_char_count);
-
-		}
-		
-
-	
-
+	}
+	return NULL;
 }
 void Scanner::prepareForNextLexem(int back) {
 
 	for (int i = 0; i < back; i++) {
 		buffer->ungetChar();
 	}
-	automat->reset(back);
+	automat->reset(buffer->getLine(), buffer->getColumn());
 	char_count = 0;
 }
 
 // For checking whether an identified identifier is a keyword.
 // used by: analyse()
 
+/**
+ * Methode prüft, ob zwei char arrays gleich sind.
+ */
+bool Scanner::compareArray(char* array1, char* array2) {
+	int i = 0;
+	while (array1[i] != '\0' && array2[i] != '\0') {
+		if (array1[i] != array2[i]) {
+			return false;
+		}
+		i++;
+	}
+	if (array1[i] != '\0' || array2[i] != '\0') {
+		return false;
+	}
+	return true;
+}
 

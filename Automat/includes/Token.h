@@ -11,7 +11,7 @@ class Token {
 			NEWLINE = 0, // ensure start counting at 0
 			SPACE,
 			UNKNOWN,
-			COMMENT,
+
 			SIGN,// For returning 'sign' to scanner
 			
 
@@ -56,7 +56,7 @@ class Token {
 				"UNKNOWN",
 				"COMMENT",
 				"SIGN",
-				
+
 				"Identifier",
 				"Integer",
 				"while",
@@ -72,7 +72,7 @@ class Token {
 				"Assign",
 				"Equal Assign",
 				"Exclamation mark",
-				"And and",
+				"DoubleAnd",
 				"Semicolon",
 				"Square bracket open", // [
 				"Square bracket close",

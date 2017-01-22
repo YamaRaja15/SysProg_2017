@@ -20,7 +20,6 @@ void giveParameter(Automat& automat) {
 	std::cout << "RESET";
 
 	std::cout << std::endl;
-	automat.reset(automat.getBack());
 
 	std::cout << "Column: ";
 	std::cout << automat.getColumn() << std::endl;

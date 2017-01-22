@@ -22,7 +22,8 @@ class Automat {
 			COMMENT2,		// 
 			COMMENT3,
 			NEWLINE,
-			UNKNOWN	// For Error Tokens
+			UNKNOWN
+
 		} State;
 
 		State currentState;
@@ -42,7 +43,7 @@ class Automat {
 		virtual ~Automat();
 
 		bool accept (char c);
-		void reset(int bad_char_count);
+		void reset(int line, int column);
 
 		bool isSpace(char c);
 		bool isIdentifier(char c);
