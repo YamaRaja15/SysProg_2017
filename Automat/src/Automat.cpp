@@ -80,9 +80,9 @@ bool Automat::accept(char c) {
 			setLastFinalState(INTEGER);
 
 			return true;
-
+			// Check if special sign (potential 'composite sign'; like ":=" "=:=" "&&")
 		} else if (isSign(c) && c != ':' && c != '=' && c != '&') {
-			/** ANYSIGN **/
+			/** currentState START? **/
 			currentState = SIGN;
 			setLastFinalState(SIGN);
 
@@ -110,16 +110,15 @@ bool Automat::accept(char c) {
 
 		} else if (isNewline(c)) {
 			/** NEWLINE **/
-			currentState = NEWLINE;
 			setLastFinalState(NEWLINE);
 			currentLine++;
 			currentColumn = 1;
 
-			return true;
+			return false;
 
 		} else {
-
-			back++;
+			// No recognized lexeme. Ignore error Token.
+			setLastFinalState(UNKNOWN);
 			return false;
 		}
 	}
@@ -134,7 +133,7 @@ bool Automat::accept(char c) {
 
 			return true;
 		} else {
-			currentState = START;
+
 
 			back++;
 			return false;
@@ -151,7 +150,6 @@ bool Automat::accept(char c) {
 
 			return true;
 		} else {
-			currentState = START;
 
 			back++;
 			return false;
@@ -168,8 +166,6 @@ bool Automat::accept(char c) {
 
 			return true;
 		} else {
-			currentState = START;
-
 			back++;
 			return false;
 		}
@@ -180,20 +176,6 @@ bool Automat::accept(char c) {
 		 * NEWLINE STATE
 		 * #################
 		 */
-	case NEWLINE: {
-		if (isNewline(c)) {
-			currentColumn = 1;
-			currentLine++;
-
-			return true;
-
-		} else {
-			currentState = START;
-
-			back++;
-			return false;
-		}
-	}
 
 		/**
 		 * #################
@@ -202,18 +184,17 @@ bool Automat::accept(char c) {
 		 */
 	case COLON: {
 		if (c == '*') {
-			currentState = COMMENT1;
+			currentState = COMMENT1;	// :*
 			setLastFinalState(COMMENT1);
 
 			return true;
 		} else if (c == '=') {
-			currentState = START;
-			setLastFinalState(ASSIGN);
+			setLastFinalState(ASSIGN);	// :=
 
 			return false;
 
 		} else {
-			currentState = START;
+			// already start of next token; put back
 
 			back++;
 			return false;
@@ -223,6 +204,7 @@ bool Automat::accept(char c) {
 		/**
 		 * #################
 		 * EQUAL STATE
+		 * last read		=
 		 * #################
 		 */
 	case EQUAL: {
@@ -235,7 +217,6 @@ bool Automat::accept(char c) {
 			return true;
 
 		} else {
-			currentState = START;
 
 			back++;
 			return false;
@@ -245,11 +226,12 @@ bool Automat::accept(char c) {
 		/**
 		 * #################
 		 * EQUAL COLON STATE
+		 * last read		=:
+		 * check	=	for		=:=
 		 * #################
 		 */
 	case EQUAL_COLON: {
 		if (c == '=') {
-			currentState = START;
 			setLastFinalState(EQUAL_ASSIGN);
 			back--;
 			return false;
@@ -263,6 +245,8 @@ bool Automat::accept(char c) {
 		/**
 		 * #################
 		 * COMMENT1 STATE
+		 * last read:	:*[...] (currently in comment)
+		 * check:	*	for		*:	
 		 * #################
 		 */
 	case COMMENT1: {
@@ -283,6 +267,8 @@ bool Automat::accept(char c) {
 		/**
 		 * #################
 		 * COMMENT2 STATE
+		 * last read		*:	[...]	*	(currently in comment)
+		 * check:	:	for	*:
 		 * #################
 		 */
 	case COMMENT2: {
@@ -297,6 +283,7 @@ bool Automat::accept(char c) {
 			return true;
 
 		} else if (isNewline(c)) {
+			currentState = COMMENT1;
 			currentColumn = 1;
 			currentLine++;
 			return true;
@@ -311,13 +298,14 @@ bool Automat::accept(char c) {
 		/**
 		 * #################
 		 * AND STATE
+		 * last read		&
+		 * check			&	for	&&
 		 * #################
 		 */
 	case AND_SIGN: {
 		if (c == '&') {
-			currentState = START;
 			setLastFinalState(DOUBLE_AND);
-
+			back--;
 			return false;
 		} else {
 			back++;
@@ -326,17 +314,12 @@ bool Automat::accept(char c) {
 	}
 		/**
 		 * #################
-		 * ANYSIGN STATE
+		 * INVALID
+		 * last read		unknown symbol
 		 * #################
 		 */
-
-		/**
-		 * #################
-		 * SIGN5 STATE
-		 * #################
-		 */
-
 	default: {
+
 		back++;
 		return false;
 	}
@@ -409,14 +392,15 @@ int Automat::getColumn() const {
  * reset the machine to start processing the next lexem
  * @param bad_char_count how many chars back
  */
-void Automat::reset(int bad_char_count) {
+void Automat::reset(int line, int column) {
 	// we go back in the buffer, so do not count these chars
-	currentColumn -= bad_char_count;
+
+
 	back = 0;
-	lastFinalState = UNDEFINED;
+	lastFinalState = UNKNOWN;
 	currentState = START;
-	startLine = currentLine;
-	startColumn = currentColumn;
+	startLine = line;
+	startColumn = column;
 }
 
 /**

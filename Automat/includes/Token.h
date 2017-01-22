@@ -7,32 +7,34 @@ class Token {
 
 	public:
 		enum Type {
+			//Special cases
 			NEWLINE = 0, // ensure start counting at 0
 			SPACE,
 			UNKNOWN,
 			COMMENT,
+			SIGN,
 
+			// Identifier and Keywords
 			IDENTIFIER,
 			INTEGER,
 			WHILE,
 			IF,
-			ELSE,
+	
+			// Special signs and special sign compounds
+			PLUS,				// +
+			MINUS,				// -
+			COLON,				// :
+			ASTERIK,			// *
+			SMALLER,			// 
+			LARGER,				// 
+			EQUAL,				// =
+			ASSIGN,				// :
+			EQUAL_ASSIGN,		// :=
+			EXCLAMATION_MARK,	// !
+			DOUBLE_AND,			// &&
+			SEMICOLON,			// ;
 
-
-			SIGN,
-			PLUS,
-			MINUS,
-			COLON,
-			ASTERIK,
-			SMALLER,
-			LARGER,
-			EQUAL,
-			ASSIGN,
-			EQUAL_ASSIGN,
-			EXCLAMATION_MARK,
-			DOUBLE_AND,
-			SEMICOLON,
-
+			// Brackets
 			SQUARE_BRACKET_OPEN, // [
 			SQUARE_BRACKET_CLOSE,
 			PARANTHESE_OPEN, // (
@@ -52,15 +54,14 @@ class Token {
 				"SPACE",
 				"UNKNOWN",
 				"COMMENT",
+				"SIGN",
 
 				"Identifier",
 				"Integer",
 				"while",
 				"if",
-				"else",
 
 
-				"SIGN",
 				"Plus",
 				"Minus",
 				"Colon",
@@ -71,7 +72,7 @@ class Token {
 				"Assign",
 				"Equal Assign",
 				"Exclamation mark",
-				"And and",
+				"DoubleAnd",
 				"Semicolon",
 				"Square bracket open", // [
 				"Square bracket close",

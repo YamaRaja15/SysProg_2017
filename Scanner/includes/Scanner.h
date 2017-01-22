@@ -19,6 +19,7 @@ class Scanner {
 		Buffer* buffer;
 		Automat* automat;
 		Symboltable* symboltable;
+		bool compareArray(char* array1, char* array2);
 
 		void prepareForNextLexem(int bad_char_count);
 };
