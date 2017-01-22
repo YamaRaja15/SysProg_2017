@@ -11,8 +11,9 @@ class Token {
 			NEWLINE = 0, // ensure start counting at 0
 			SPACE,
 			UNKNOWN,
-			COMMENT,
-			SIGN,
+
+			SIGN,// For returning 'sign' to scanner
+			
 
 			// Identifier and Keywords
 			IDENTIFIER,
@@ -36,9 +37,9 @@ class Token {
 
 			// Brackets
 			SQUARE_BRACKET_OPEN, // [
-			SQUARE_BRACKET_CLOSE,
-			PARANTHESE_OPEN, // (
-			PARANTHESE_CLOSE,
+			SQUARE_BRACKET_CLOSE,// ]
+			PARANTHESIS_OPEN, 	 // (
+			PARANTHESIS_CLOSE,
 			CURLY_BRACKET_OPEN, // {
 			CURLY_BRACKET_CLOSE,
 
@@ -61,7 +62,6 @@ class Token {
 				"while",
 				"if",
 
-
 				"Plus",
 				"Minus",
 				"Colon",
@@ -76,8 +76,8 @@ class Token {
 				"Semicolon",
 				"Square bracket open", // [
 				"Square bracket close",
-				"Paranthese open", // (
-				"Paranthese close",
+				"Paranthesis open", // (
+				"Paranthesis close",
 				"Curly bracket open", // {
 				"Curly bracket close"
 			};

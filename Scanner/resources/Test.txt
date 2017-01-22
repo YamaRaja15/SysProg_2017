@@ -16,3 +16,12 @@ durchmodulo
 ABCDEFGHIJK$LMNOPQRSTUVWXYZ
 while IF
 IFWHILE
+=======
+0123456789 
+
+
+&
+0012345.12E-12
+12345.13E+11 
+blumen sind toll!
+:= qwewq| =:= |qweqwefd ! | && --__----?

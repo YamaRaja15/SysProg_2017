@@ -9,6 +9,7 @@
 int main(int argc, char *argv[]) {
 	// check if a path to a text file is provided
 	cout << "processing..." << '\n';
+
 	if (argc == 3) {
 		Scanner* scanner = new Scanner(argv[1]);
 
@@ -41,6 +42,7 @@ int main(int argc, char *argv[]) {
 
 			token = scanner->nextToken();
 		}
+		printf("stop");
 
 		cout << "stop";
 

@@ -199,6 +199,7 @@ Token* Scanner::analyse(char c, int char_count) {
 			
 		} else if (compareArray(scanner_buffer, "WHILE") ||
 				compareArray(scanner_buffer, "while")){
+
 				lexem_type = Token::WHILE;
 		} else{
 			// Ansonsten Identifier in SymbolTabelle einfügen
